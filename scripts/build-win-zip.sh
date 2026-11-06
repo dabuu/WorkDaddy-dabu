@@ -358,7 +358,7 @@ patch('scripts/verify-win.cmd', [
     (r'Desktop\WorkDaddy.lnk', r'Desktop\WorkDaddy AI.lnk'),
     ('桌面已有 WorkDaddy 图标', '桌面已有 WorkDaddy AI 图标'),
 ])
-print('==>  品牌化替换完成（Start/Stop/install-win/launcher/verify-win + base64 提示）')
+print('==>AI branding replacement completed')
 PY
 fi
 # CodeDaddy keeps stable internal launcher filenames; visible labels follow the package.
