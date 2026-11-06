@@ -122,7 +122,9 @@ jobs:
         shell: bash
         env:
           WORKDADDY_BUILD_VERSION: ${{ steps.ver.outputs.version }}
-        run: bash scripts/build-win-zip.sh
+        run: |
+          WORKDADDY_BUILD_PROFILE=workbuddy-cn bash scripts/build-win-zip.sh
+          WORKDADDY_BUILD_PROFILE=workbuddy-ai bash scripts/build-win-zip.sh
 
       - name: 安装 Inno Setup
         shell: pwsh
