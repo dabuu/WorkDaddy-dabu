@@ -31,7 +31,46 @@ jobs:
         with:
           go-version: '1.27.0'
           cache: false
+          
+      - name: 自动规范化 CMD 换行符为 CRLF
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem -Path scripts -Filter *.cmd -File
 
+          foreach ($file in $files) {
+            $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
+            $stream = [System.IO.MemoryStream]::new()
+
+            for ($i = 0; $i -lt $bytes.Length; $i++) {
+              $b = $bytes[$i]
+
+              if ($b -eq 13) {
+                $stream.WriteByte(13)
+                $stream.WriteByte(10)
+
+                if (($i + 1) -lt $bytes.Length -and $bytes[$i + 1] -eq 10) {
+                  $i++
+                }
+              }
+              elseif ($b -eq 10) {
+                $stream.WriteByte(13)
+                $stream.WriteByte(10)
+              }
+              else {
+                $stream.WriteByte($b)
+              }
+            }
+
+            [System.IO.File]::WriteAllBytes(
+              $file.FullName,
+              $stream.ToArray()
+            )
+
+            $stream.Dispose()
+
+            Write-Host "已规范化: $($file.Name)"
+          }
+          
       - name: 校验 CRLF（cmd 必须 CRLF，否则 cmd.exe 解析括号块会失败）
         shell: bash
         run: |
