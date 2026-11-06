@@ -1,2 +1,2 @@
-*.cmd -text whitespace=cr-at-eol
+*.cmd text eol=crlf
 *.sh text eol=lf
