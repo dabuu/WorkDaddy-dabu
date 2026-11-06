@@ -4171,14 +4171,26 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
             }
             if (!ph2) return;
             acMenuClose();
-            qpDiag('api:send', { phraseId: pid });
-            api('/api/quick-phrase-send', {
-              method: 'POST',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({ text: ph2.text }),
-            }).then(function (d) {
-              if (!d || !d.ok) toast('发送失败: ' + ((d && d.error) || 'daemon 未确认'), true, root);
-            }).catch(function (e3) { toast('发送失败: ' + (e3.message || e3), true, root); });
+            // 获取当前 WorkBuddy 输入框
+            var editor = findComposer();
+            
+            if (!editor) {
+              toast('未找到当前会话输入框', true, root);
+              return;
+            }
+            
+            // 聚焦输入框
+            editor.focus();
+            
+            // 将快捷短语插入输入框
+            // 使用 execCommand，让 contenteditable / Slate 输入框能够接收输入事件
+            var inserted = document.execCommand('insertText', false, ph2.text);
+            
+            if (inserted) {
+              toast('快捷短语已插入', false, root);
+            } else {
+              toast('快捷短语插入失败', true, root);
+            }
           });
         })(items[k]);
       }
